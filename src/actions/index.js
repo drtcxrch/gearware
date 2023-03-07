@@ -1,6 +1,6 @@
-export const setUserActivities = (data) => {
+export const setUserBikes = (data) => {
   return {
-    type: "SET_USER_ACTIVITIES",
+    type: "SET_BIKES",
     payload: data,
   };
 };

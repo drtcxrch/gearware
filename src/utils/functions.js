@@ -30,10 +30,14 @@ export const testAuthGetter = async (authTok) => {
 
 export const getUserData = async (userID, accessToken) => {
   try {
-    const response = await axios.get(
-      `https://www.strava.com/api/v3/athletes/${userID}/stats`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
+    // const response = await axios.get(
+    //   `https://www.strava.com/api/v3/athletes/${userID}/stats`,
+    //   { headers: { Authorization: `Bearer ${accessToken}` } }
+    // );
+     const response = await axios.get(
+       `https://www.strava.com/api/v3/athlete`,
+       { headers: { Authorization: `Bearer ${accessToken}` } }
+     );
     return response;
   } catch (error) {
     console.log(error);

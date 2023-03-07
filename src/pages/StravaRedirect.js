@@ -2,7 +2,7 @@ import React from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
 
-import { setUser, setUserActivities } from "../actions";
+import { setUser, setUserBikes } from "../actions";
 import {
   cleanUpAuthToken,
   testAuthGetter,
@@ -30,10 +30,10 @@ class StravaRedirect extends React.Component {
 
         // Axios request to get users info
         const user = await getUserData(userID, accessToken);
-        this.props.setUserActivities(user);
+        this.props.setUserBikes(user);
 
         // Once complete, go to display page
-        this.props.navigate('/yourdistance')
+        this.props.navigate('/yourbikes')
       } catch (error) {
         this.props.navigate('/')
       }
@@ -51,6 +51,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  setUserActivities,
+  setUserBikes,
   setUser,
 })(withRouter(StravaRedirect));
