@@ -10,7 +10,7 @@ const setUserReducer = (tokens = null, action) => {
 };
 
 const setUserBikesReducer = (user = null, action) => {
-  if (action.type === "SET_BIKES") {
+  if (action.type === "SET_USER_BIKES") {
     return action.payload;
   }
   return user;
