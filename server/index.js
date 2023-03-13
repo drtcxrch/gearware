@@ -6,7 +6,7 @@ const db = require("./db");
 const bikeRouter = require("./routes/bike-router");
 
 const app = express();
-const apiPort = 3000;
+const apiPort = 4000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());

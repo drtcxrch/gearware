@@ -9,6 +9,7 @@ import {
   getUserData,
 } from "../utils/functions";
 import  { withRouter } from "../router/withRouter"
+import axios from 'axios';
 
 class StravaRedirect extends React.Component {
   componentDidMount() {
@@ -31,6 +32,8 @@ class StravaRedirect extends React.Component {
         // Axios request to get users info
         const user = await getUserData(userID, accessToken);
         this.props.setUserBikes(user);
+        // console.log('USER!!:', user)
+        axios.post('http://localhost:4000/api/bikes', user.data.bikes)
 
         // Once complete, go to display page
         this.props.navigate('/yourbikes')

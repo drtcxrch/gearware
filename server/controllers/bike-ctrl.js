@@ -35,6 +35,40 @@ createBike = (req, res) => {
     });
 };
 
+createBikes = (req, res) => {
+  const body = req.body;
+
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: "You must provide a bike",
+    });
+  }
+
+  console.log('bikes:', body)
+  // const bike = new Bike(body);
+
+  // if (!bike) {
+  //   return res.status(400).json({ success: false, error: err });
+  // }
+
+  // bike
+  //   .save()
+  //   .then(() => {
+  //     return res.status(201).json({
+  //       success: true,
+  //       id: bike._id,
+  //       message: "Bike created!",
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     return res.status(400).json({
+  //       error,
+  //       message: "Bike not created!",
+  //     });
+  //   });
+};
+
 updateBike = async (req, res) => {
   const body = req.body;
 
@@ -108,80 +142,28 @@ getBikeById = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-getBikes = async (req, res) => {
-  await Bike.find({}, (err, bikes) => {
-    if (err) {
-      return res.status(400).json({ sucess: false, error: err });
-    }
-    if (!bikes.length) {
-      return res.status(204).json({ sucess: false, error: "Bikes not found" });
-    }
-    return res.status(200).json({ sucess: true, data: bikes });
-  }).catch((err) => console.log(err));
+getBikes = (req, res) => {
+     Bike.find({})
+      .then(bikes => res.status(200).json({ success: true, data: bikes }))
+      .catch(err => console.log('Error getting bikes:', err))
+      ;
+  // await Bike.find({}, (err, bikes) => {
+  //   if (err) {
+  //     return res.status(400).json({ sucess: false, error: err });
+  //   }
+  //   if (!bikes.length) {
+  //     return res.status(204).json({ sucess: false, error: "Bikes not found" });
+  //   }
+  //   return res.status(200).json({ sucess: true, data: bikes });
+  // }).catch((err) => console.log(err));
 };
 
-getStrava = async (req, res) => {
-  //If access token is expired:
-  getAccessToken = () => {
-    var data = JSON.stringify({
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET,
-      refresh_token: process.env.REFRESH_TOKEN,
-      grant_type: "refresh_token",
-    });
-
-    var config = {
-      method: "post",
-      url: "https://www.strava.com/oauth/token",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: data,
-    };
-
-    axios(config)
-      .then(function (response) {
-        let newToken = response.data.access_token;
-        getAthlete(newToken);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  //Otherwise:
-  getAthlete = (accessToken) => {
-    let access_token = accessToken || process.env.ACCESS_TOKEN;
-    var config = {
-      method: "get",
-      url: `https://www.strava.com/api/v3/athlete?access_token=${access_token}`,
-      headers: {
-        Authorization:
-          "Basic" +
-          new Buffer.from(
-            process.env.CLIENT_ID + ":" + process.env.CLIENT_SECRET
-          ).toString("base64"),
-      },
-    };
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        error.response.data.errors[0].field === "access_token" &&
-        error.response.data.errors[0].code === "invalid"
-          ? getAccessToken()
-          : null;
-      });
-  };
-
-  getAthlete();
-};
 
 module.exports = {
   createBike,
+  createBikes,
   updateBike,
   deleteBike,
   getBikes,
   getBikeById,
-  getStrava,
 };
