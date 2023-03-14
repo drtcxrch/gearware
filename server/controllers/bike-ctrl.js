@@ -35,38 +35,63 @@ createBike = (req, res) => {
     });
 };
 
-createBikes = (req, res) => {
+createBikes = async (req, res) => {
   const body = req.body;
 
   if (!body) {
     return res.status(400).json({
       success: false,
-      error: "You must provide a bike",
+      error: "No bikes in Strava gear",
     });
   }
+  let formatted = await Promise.all(body.map( async bikeObj => {
+    const bike = await new Bike(bikeObj)
+    bike._id = bikeObj.id
 
-  console.log('bikes:', body)
-  // const bike = new Bike(body);
+    if (!bike.type) {
+      bike.type = '';
+    }
+    if (!bike.chain) {
+      bike.chain = bikeObj.mileage;
+    }
+    if (!bike.chainring) {
+      bike.chainring = bikeObj.mileage;
+    }
+    if (!bike.cassette) {
+      bike.cassette = bikeObj.mileage;
+    }
+    if (!bike.pads) {
+      bike.pads = bikeObj.mileage;
+    }
+    if (!bike.lines) {
+      bike.lines = bikeObj.mileage;
+    }
+    if (!bike.front) {
+      bike.front = bikeObj.mileage;
+    }
+    if (!bike.rear) {
+      bike.rear = bikeObj.mileage;
+    }
 
-  // if (!bike) {
-  //   return res.status(400).json({ success: false, error: err });
-  // }
+    return bike;
 
-  // bike
-  //   .save()
-  //   .then(() => {
-  //     return res.status(201).json({
-  //       success: true,
-  //       id: bike._id,
-  //       message: "Bike created!",
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     return res.status(400).json({
-  //       error,
-  //       message: "Bike not created!",
-  //     });
-  //   });
+    }));
+
+    Bike
+      .insertMany(formatted)
+      .then(() => {
+        return res.status(201).json({
+          success: true,
+          message: "Bikes created!",
+        });
+      })
+      .catch((error) => {
+        return res.status(400).json({
+          error,
+          message: "Bike not created!",
+        });
+      });
+
 };
 
 updateBike = async (req, res) => {

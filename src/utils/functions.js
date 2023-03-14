@@ -39,3 +39,18 @@ export const getUserData = async (userID, accessToken) => {
     console.log(error);
   }
 };
+
+export const formatBikes = (bikes) => {
+  let formatted = [];
+
+  for (let bike of bikes) {
+    let newBike = {
+      id: bike.id,
+      name: bike.name,
+      mileage: bike.converted_distance
+    };
+    formatted.push(newBike);
+  }
+
+  return formatted;
+}
